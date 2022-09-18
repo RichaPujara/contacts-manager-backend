@@ -1,15 +1,18 @@
-const express = require('express')
-const router = express.Router()
-const ContactModel = require('./models/contactModel.js')
+const express = require("express");
+const router = express.Router();
+const ContactModel = require("./models/contactModel.js");
+const multiVcardParser = require("./helper");
 
-router.get('/', (req, res) => {
-   ContactModel.find().sort({ first_name: 1, last_name: 1 }).exec((err, docs) => {
-    if (err) {
-      res.status(500).json({ message: err.message });
-    }
-    res.status(200).send(docs);
-  })
-})
+router.get("/", (req, res) => {
+  ContactModel.find()
+    .sort({ first_name: 1, last_name: 1 })
+    .exec((err, docs) => {
+      if (err) {
+        res.status(500).json({ message: err.message });
+      }
+      res.status(200).send(docs);
+    });
+});
 
 router.get("/:id", (req, res) => {
   ContactModel.findById(req.params.id).exec((err, docs) => {
@@ -23,11 +26,23 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   ContactModel.create(req.body, (err, doc) => {
     if (err) {
-      res.status(422).json({ message: err.message})
+      res.status(422).json({ message: err.message });
     }
-    res.status(201).send(doc)
-  })
-})
+    res.status(201).send(doc);
+  });
+});
+
+router.post("/import", async (req, res) => {
+  const contact = multiVcardParser(req.body.vcard);
+  res.status(201).send(contact);
+
+  // ContactModel.create(contact, (err, doc) => {
+  //   if (err) {
+  //     res.status(422).json({ message: err.message });
+  //   }
+  //   res.status(201).send(doc);
+  // });
+});
 
 router.put("/:id", async (req, res) => {
   res.send(

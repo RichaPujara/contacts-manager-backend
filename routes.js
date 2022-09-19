@@ -34,14 +34,14 @@ router.post("/", (req, res) => {
 
 router.post("/import", async (req, res) => {
   const contact = multiVcardParser(req.body.vcard);
-  res.status(201).send(contact);
+  // res.status(201).send(contact);
 
-  // ContactModel.create(contact, (err, doc) => {
-  //   if (err) {
-  //     res.status(422).json({ message: err.message });
-  //   }
-  //   res.status(201).send(doc);
-  // });
+  ContactModel.create(contact, (err, doc) => {
+    if (err) {
+      res.status(422).json({ message: err.message });
+    }
+    res.status(201).send(doc);
+  });
 });
 
 router.put("/:id", async (req, res) => {

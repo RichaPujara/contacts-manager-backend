@@ -12,6 +12,6 @@ app.use(express.json());
 // Routes
 
 const apiV1Routes = require("./routes.js");
-app.use("/", apiV1Routes);
+app.use("/contacts", apiV1Routes);
 
 module.exports = app;
